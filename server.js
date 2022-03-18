@@ -1,16 +1,15 @@
 const express = require('express');
-const { json } = require('express/lib/response');
 const db = require('./db/connection');
-
 const apiRoutes = require('./routes/apiRoutes'); //which is to index.js (which is automatically understood in Node)
 
 const PORT = process.env.PORT || 3001;
 const app = express();
 
 //Express middleware
-app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
+// Use apiRoutes
 app.use('/api', apiRoutes);
 
 // "Not Found" response for any other request
