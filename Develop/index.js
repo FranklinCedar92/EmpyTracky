@@ -11,6 +11,20 @@ const questions = () => {
             name: 'toDo',
             message: 'What would you like to do?',
             choices: ['View all departments', 'View all roles', 'View all employees', 'Add a department', 'Add a role', 'Add an employee', 'Update an employee']
+        },
+        {
+            type: 'text',
+            name: 'newDept',
+            message: 'Please enter the department name',
+            validate: newDeptNameInput => {
+                if (newDeptNameInput) {
+                    return true
+                } else {
+                    console.log('Please enter a name!');
+                    return false
+                }
+            },
+            when: (answers) => answers.toDo === 'Add a department'
         }
     ])
 }
@@ -20,7 +34,7 @@ With all of these, I want to SELECT the choices from the
 database, so that if a new dept/emp/role is added, it will
 appear as a choice in the inquirer prompt
 */
-const newDeptQuestions = () => {
+/*const newDeptQuestions = () => {
     return inquirer.prompt([
         {
             type: 'text',
@@ -33,10 +47,11 @@ const newDeptQuestions = () => {
                     console.log('Please enter a name!');
                     return false
                 }
-            }
+            },
+            when: (answers) => answers.toDo === 'Add a department'
         }
     ])
-}
+} */
 
 const newRoleQuestions = () => {
     return inquirer.prompt([
