@@ -1,7 +1,7 @@
-//This is the file with the prompts in it
 const inquirer = require('inquirer');
 const fs = require('fs');
-// const generateTable = require('../../db/schema');
+const cTable = require('console.table');
+const seeds = require('../db/seeds');
 
 // Questions for user input
 const questions = () => {
@@ -41,7 +41,8 @@ const questions = () => {
 };
 
 const viewDepts = () => {
-    console.log('look, a department');
+    console.log('Viewing all departments');
+    const sql = `SELECT * FROM departments`;
 };
 
 const viewRoles = () => {
@@ -74,275 +75,150 @@ const addDept = () => {
 };
 
 const addRole = () => {
+    inquirer.prompt([
+        {
+            type: 'input',
+            name: 'newRoleName',
+            message: 'Please enter the job title',
+            validate: newDeptNameInput => {
+                if (newDeptNameInput) {
+                    return true
+                } else {
+                    console.log('Please enter a title!');
+                    return false
+                }
+            }
+        },
+        {
+            type: 'list',
+            name: 'newRoleDept',
+            message: 'Which department is this role in?',
+            choices: ['Admissions', 'Administration', 'Teachers']
 
+        }
+    ]).then((answers) => {
+        console.log(answers.newRoleName);
+        console.log(answers.newRoleDept);
+        console.log('Role added!');
+    })
+    
 };
 
 const addEmp = () => {
-
+    inquirer.prompt([
+        {
+            type: 'input',
+            name: 'newEmpFirstName',
+            message: `Please enter the employee's first name`,
+            validate: newDeptNameInput => {
+                if (newDeptNameInput) {
+                    return true
+                } else {
+                    console.log('Please enter a name!');
+                    return false
+                }
+            }
+        },
+        {
+            type: 'input',
+            name: 'newEmpLastName',
+            message: `Please enter the employee's last name`,
+            validate: newDeptNameInput => {
+                if (newDeptNameInput) {
+                    return true
+                } else {
+                    console.log('Please enter a name!');
+                    return false
+                }
+            }
+        },
+        {
+            type: 'input',
+            name: 'newEmpRole',
+            message: `Please enter the employee's job title`,
+            validate: newDeptNameInput => {
+                if (newDeptNameInput) {
+                    return true
+                } else {
+                    console.log('Please enter a title!');
+                    return false
+                }
+            }
+        },
+        {
+            type: 'input',
+            name: 'newEmpManager',
+            message: `Please enter the employee's manager`,
+            validate: newDeptNameInput => {
+                if (newDeptNameInput) {
+                    return true
+                } else {
+                    console.log('Please enter a name!');
+                    return false
+                }
+            }
+        }
+    ]).then((answers) => {
+        console.log(answers.newEmpFirstName);
+        console.log(answers.newEmpLastName);
+        console.log(answers.newEmpRole);
+        console.log(answers.newEmpManager);
+        console.log('Employee added!');
+    })
+   
 };
 
 const updateEmp = () => {
-
+    inquirer.prompt([
+        {
+            type: 'input',
+            name: 'updateEmpRoleFirstName',
+            message: `Please enter the employee's first name`,
+            validate: newDeptNameInput => {
+                if (newDeptNameInput) {
+                    return true
+                } else {
+                    console.log('Please enter a name!');
+                    return false
+                }
+            }
+        },
+        {
+            type: 'input',
+            name: 'updateEmpRoleLastName',
+            message: `Please enter the employee's last name`,
+            validate: newDeptNameInput => {
+                if (newDeptNameInput) {
+                    return true
+                } else {
+                    console.log('Please enter a name!');
+                    return false
+                }
+            }
+        },
+        {
+            type: 'input',
+            name: 'updateEmpRole',
+            message: `Please enter the employee's new job title`,
+            validate: newDeptNameInput => {
+                if (newDeptNameInput) {
+                    return true
+                } else {
+                    console.log('Please enter a title!');
+                    return false
+                }
+            }
+        }
+    ]).then((answers) => {
+        console.log(answers.updateEmpRole);
+        console.log('Employee updated!')
+    })
 };
 
 
 
 questions();
-/*        {
-            type: 'text',
-            name: 'newDept',
-            message: 'Please enter the department name',
-            validate: newDeptNameInput => {
-                if (newDeptNameInput) {
-                    return true
-                } else {
-                    console.log('Please enter a name!');
-                    return false
-                }
-            },
-            when(answers) {
-                return answers.toDo === 'Add a department'
-            }
-        },
-        {
-            type: 'text',
-            name: 'newRoleName',
-            message: 'Please enter the new role name',
-            validate: newRoleNameInput => {
-                if (newRoleNameInput) {
-                    return true
-                } else {
-                    console.log('Please enter a name!');
-                    return false
-                }
-            },
-            when(answers) {
-                return answers.toDo === 'Add a role'
-            }
-        },
-        {
-            type: 'text',
-            name: 'newRoleDept',
-            message: 'Please enter the department name',
-            validate: newRoleDeptInput => {
-                if (newRoleDeptInput) {
-                    return true
-                } else {
-                    console.log('Please enter a name!');
-                    return false
-                }
-            },
-            when(answers) {
-                return answers.toDo === 'Add a role'
-            }
-        },
-        {
-            type: 'text',
-            name: 'newRoleSalary',
-            message: 'Please enter a salary',
-            validate: newRoleSalaryInput => {
-                if (newRoleSalaryInput) {
-                    return true
-                } else {
-                    console.log('Please enter a salary!');
-                    return false
-                }
-            },
-            when(answers) {
-                return answers.toDo === 'Add a role'
-            }
-        },
-        {
-            type: 'text',
-            name: 'newEmpFirstName',
-            message: `Please enter the new employee's first name`,
-            validate: newEmpFirstNameInput => {
-                if (newEmpFirstNameInput) {
-                    return true
-                } else {
-                    console.log('Please enter a name!');
-                    return false
-                }
-            },
-            when(answers) {
-                return answers.toDo === 'Add an employee'
-            }
-        },
-        {
-            type: 'text',
-            name: 'newEmpLastName',
-            message: `Please enter the new employee's last name`,
-            validate: newEmpLastNameInput => {
-                if (newEmpLastNameInput) {
-                    return true
-                } else {
-                    console.log('Please enter a name!');
-                    return false
-                }
-            },
-            when(answers) {
-                return answers.toDo === 'Add an employee'
-            }
-        },
-        {
-            type: 'text',
-            name: 'newEmpRole',
-            message: `Please enter the new employee's role`,
-            validate: newEmpRoleInput => {
-                if (newEmpRoleInput) {
-                    return true
-                } else {
-                    console.log('Please enter a salary!');
-                    return false
-                }
-            },
-            when(answers) {
-                return answers.toDo === 'Add an employee'
-            }
-        },
-        {
-            type: 'text',
-            name: 'newEmpMan',
-            message: `Please enter the new employee's manager`,
-            validate: newEmpManInput => {
-                if (newEmpManInput) {
-                    return true
-                } else {
-                    console.log('Please enter a manager!');
-                    return false
-                }
-            },
-            when(answers) {
-                return answers.toDo === 'Add an employee'
-            }
-        },
-    ])
-};
 
-/*
-With all of these, I want to SELECT the choices from the 
-database, so that if a new dept/emp/role is added, it will
-appear as a choice in the inquirer prompt
-*/
-/*const newDeptQuestions = () => {
-    return inquirer.prompt([
-        {
-            type: 'text',
-            name: 'newDept',
-            message: 'Please enter the department name',
-            validate: newDeptNameInput => {
-                if (newDeptNameInput) {
-                    return true
-                } else {
-                    console.log('Please enter a name!');
-                    return false
-                }
-            },
-            when: (answers) => answers.toDo === 'Add a department'
-        }
-    ])
-} */
-
-/*const newRoleQuestions = () => {
-    return inquirer.prompt([
-        {
-            type: 'text',
-            name: 'newRoleName',
-            message: 'Please enter the new role name',
-            validate: newRoleNameInput => {
-                if (newRoleNameInput) {
-                    return true
-                } else {
-                    console.log('Please enter a name!');
-                    return false
-                }
-            }
-        }, 
-        {
-            type: 'text',
-            name: 'newRoleDept',
-            message: 'Please enter the department name',
-            validate: newRoleDeptInput => {
-                if (newRoleDeptInput) {
-                    return true
-                } else {
-                    console.log('Please enter a name!');
-                    return false
-                }
-            }
-        },
-        {
-            type: 'text',
-            name: 'newRoleSalary',
-            message: 'Please enter a salary',
-            validate: newRoleSalaryInput => {
-                if (newRoleSalaryInput) {
-                    return true
-                } else {
-                    console.log('Please enter a salary!');
-                    return false
-                }
-            }
-        },
-    ])
-}
-
-const newEmpQuestions = () => {
-    return inquirer.prompt([
-        {
-            type: 'text',
-            name: 'newEmpFirstName',
-            message: `Please enter the new employee's first name`,
-            validate: newEmpFirstNameInput => {
-                if (newEmpFirstNameInput) {
-                    return true
-                } else {
-                    console.log('Please enter a name!');
-                    return false
-                }
-            }
-        },
-        {
-            type: 'text',
-            name: 'newEmpLastName',
-            message: `Please enter the new employee's last name`,
-            validate: newEmpLastNameInput => {
-                if (newEmpLastNameInput) {
-                    return true
-                } else {
-                    console.log('Please enter a name!');
-                    return false
-                }
-            }
-        },
-        {
-            type: 'text',
-            name: 'newEmpRole',
-            message: `Please enter the new employee's role`,
-            validate: newEmpRoleInput => {
-                if (newEmpRoleInput) {
-                    return true
-                } else {
-                    console.log('Please enter a salary!');
-                    return false
-                }
-            }
-        },
-        {
-            type: 'text',
-            name: 'newEmpMan',
-            message: `Please enter the new employee's manager`,
-            validate: newEmpManInput => {
-                if (newEmpManInput) {
-                    return true
-                } else {
-                    console.log('Please enter a manager!');
-                    return false
-                }
-            }
-        },
-    ])
-}*/
 
 
 

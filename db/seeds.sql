@@ -4,7 +4,7 @@ VALUES
 ('Administration'),
 ('Teachers');
 
-INSERT INTO roles (job_title, department, salary)
+INSERT INTO roles (job_title, department_id, salary)
 VALUES
 ('Head Accountant', 2, 80000),
 ('Science Teacher', 3, 75000),
@@ -22,7 +22,7 @@ VALUES
 ('Superintendant', 2, 200000),
 ('Head Teacher', 3, 80000);
 
-INSERT INTO employees (first_name, last_name, manager, job_title)
+INSERT INTO employees (first_name, last_name, manager_id, role_id)
 VALUES
 ('Rufus', 'Pichler', NULL, 14),
 ('Claudia', 'Mueller', 1, 3),
