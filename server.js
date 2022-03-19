@@ -1,5 +1,6 @@
 const express = require('express');
 const db = require('./db/connection');
+const inputCheck = require('./utils/inputCheck');
 const apiRoutes = require('./routes/apiRoutes'); //which is to index.js (which is automatically understood in Node)
 
 const PORT = process.env.PORT || 3001;
@@ -11,6 +12,13 @@ app.use(express.json());
 
 // Use apiRoutes
 app.use('/api', apiRoutes);
+
+// test route
+app.get('/', (req, res) => {
+    res.json({
+        message: 'Hello world!'
+    });
+}); //it works!
 
 // "Not Found" response for any other request
 app.use((req, res) => {

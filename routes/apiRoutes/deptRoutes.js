@@ -2,10 +2,11 @@ const express = require('express');
 const router = express.Router();
 const db = require('../../db/connection');
 const inputCheck = require('../../utils/inputCheck');
+const input = require('../../Develop/index')
 
 // GET list of all departments
 router.get('/departments', (req, res) => {
-    const sql = // 'this is where the table info goes';
+    const sql = 'SELECT * FROM departments';
     db.query(sql, (err, rows => {
         if (err) {
             res.status(500).json({ error: err.message });
@@ -26,7 +27,7 @@ router.post('/department', (req, res) => {
         return;
     }
     const sql = `INSERT INTO departments (dept_name)
-                VALUES (?)`;
+                VALUES (${input})`;
     const params = [body.dept_name];
 
     db.query(sql, params, (err, result) => {
