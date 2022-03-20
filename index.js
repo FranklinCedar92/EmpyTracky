@@ -82,7 +82,11 @@ const viewRoles = () => {
 
 const viewEmps = () => {
     console.log('Viewing all employees');
-    const sql = `SELECT * FROM employees`;
+    const sql = `SELECT * FROM employees,  roles.job_title
+                AS role_id
+                FROM employees
+                FULL JOIN roles
+                ON employees.role_id = roles.id`;
     db.query(sql, (err, results) => {
         if (err) throw err;
         console.table(results);
@@ -266,3 +270,11 @@ const updateEmp = () => {
         });
     });
 };
+
+/*
+`SELECT employees.*,  roles.job_title
+                AS role_id
+                FROM employees
+                LEFT JOIN roles
+                ON employees.role_id = roles.id`;
+*/
