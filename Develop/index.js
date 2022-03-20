@@ -1,7 +1,27 @@
 const inquirer = require('inquirer');
 const fs = require('fs');
+const mysql = require('mysql2');
 const cTable = require('console.table');
-const seeds = require('../db/seeds');
+//const seeds = require('../db/seeds');
+
+//Connect to MySQL database
+const db = mysql.createConnection(
+    {
+        host: 'localhost',
+        //Your MySQL username,
+        user: 'root',
+        //Your MySQL password
+        password: 'Lamppost00!',
+        database: 'tracker'
+    },
+    console.log('Connected to the tracker database.')
+);
+
+db.connect((err) => {
+    if (err) throw err;
+    // console.log('Connected to the tracker database.')
+    questions();
+});
 
 // Questions for user input
 const questions = () => {
@@ -43,14 +63,31 @@ const questions = () => {
 const viewDepts = () => {
     console.log('Viewing all departments');
     const sql = `SELECT * FROM departments`;
+    db.query(sql, (err, results) => {
+        if (err) throw err;
+        console.table(results);
+        questions();
+    })
 };
 
 const viewRoles = () => {
-
+    console.log('Viewing all roles');
+    const sql = `SELECT * FROM roles`;
+    db.query(sql, (err, results) => {
+        if (err) throw err;
+        console.table(results);
+        questions();
+    })
 };
 
 const viewEmps = () => {
-
+    console.log('Viewing all employees');
+    const sql = `SELECT * FROM employees`;
+    db.query(sql, (err, results) => {
+        if (err) throw err;
+        console.table(results);
+        questions();
+    })
 };
 
 const addDept = () => {
@@ -69,7 +106,15 @@ const addDept = () => {
             }
         }
     ]).then((answers) => {
-        console.log(answers.newDept);
+        const sql = `INSERT INTO departments (dept_name)
+                VALUES (?)`;
+        const params = [answers.newDept];
+
+        db.query(sql, params, (err, results) => {
+            if (err) throw err;
+            console.table(results);
+            questions();
+        });
     })
     
 };
@@ -90,18 +135,28 @@ const addRole = () => {
             }
         },
         {
-            type: 'list',
+            type: 'number',
+            name: 'salary',
+            message: 'What is the salary for this position?'
+        },
+        {
+            type: 'number',
             name: 'newRoleDept',
-            message: 'Which department is this role in?',
+            message: 'Which department is this role in? Admissions -- 1, Administration -- 2, Teachers -- 3',
             choices: ['Admissions', 'Administration', 'Teachers']
 
         }
     ]).then((answers) => {
-        console.log(answers.newRoleName);
-        console.log(answers.newRoleDept);
-        console.log('Role added!');
-    })
-    
+        const sql = `INSERT INTO roles (job_title, salary, department_id)
+                VALUES (?,?,?)`;
+        const params = [answers.newRoleName, answers.salary, answers.newRoleDept];
+
+        db.query(sql, params, (err, results) => {
+            if (err) throw err;
+            console.table(results);
+            questions();
+        });
+    });
 };
 
 const addEmp = () => {
@@ -133,73 +188,64 @@ const addEmp = () => {
             }
         },
         {
-            type: 'input',
-            name: 'newEmpRole',
-            message: `Please enter the employee's job title`,
+            type: 'number',
+            name: 'newEmpRoleID',
+            message: `Please enter the employee's job id number`,
             validate: newDeptNameInput => {
                 if (newDeptNameInput) {
                     return true
                 } else {
-                    console.log('Please enter a title!');
+                    console.log('Please enter a number!');
                     return false
                 }
             }
         },
         {
-            type: 'input',
+            type: 'number',
             name: 'newEmpManager',
-            message: `Please enter the employee's manager`,
+            message: `Please enter the employee's manager id number`,
             validate: newDeptNameInput => {
                 if (newDeptNameInput) {
                     return true
                 } else {
-                    console.log('Please enter a name!');
+                    console.log('Please enter a number!');
                     return false
                 }
             }
         }
     ]).then((answers) => {
-        console.log(answers.newEmpFirstName);
-        console.log(answers.newEmpLastName);
-        console.log(answers.newEmpRole);
-        console.log(answers.newEmpManager);
-        console.log('Employee added!');
-    })
+        const sql = `INSERT INTO employees (first_name, last_name, role_id, manager_id)
+                VALUES (?,?,?,?)`;
+        const params = [answers.newEmpFirstName, answers.newEmpLastName, answers.newEmpRoleID, answers.newEmpManager];
+
+        db.query(sql, params, (err, results) => {
+            if (err) throw err;
+            console.table(results);
+            questions();
+        });
+    });
    
 };
 
 const updateEmp = () => {
     inquirer.prompt([
         {
-            type: 'input',
-            name: 'updateEmpRoleFirstName',
-            message: `Please enter the employee's first name`,
+            type: 'num',
+            name: 'updateEmpID',
+            message: `Please enter the employee's id number`,
             validate: newDeptNameInput => {
                 if (newDeptNameInput) {
                     return true
                 } else {
-                    console.log('Please enter a name!');
+                    console.log('Please enter a number!');
                     return false
                 }
             }
         },
         {
-            type: 'input',
-            name: 'updateEmpRoleLastName',
-            message: `Please enter the employee's last name`,
-            validate: newDeptNameInput => {
-                if (newDeptNameInput) {
-                    return true
-                } else {
-                    console.log('Please enter a name!');
-                    return false
-                }
-            }
-        },
-        {
-            type: 'input',
+            type: 'num',
             name: 'updateEmpRole',
-            message: `Please enter the employee's new job title`,
+            message: `Please enter the employee's new job id number`,
             validate: newDeptNameInput => {
                 if (newDeptNameInput) {
                     return true
@@ -210,28 +256,13 @@ const updateEmp = () => {
             }
         }
     ]).then((answers) => {
-        console.log(answers.updateEmpRole);
-        console.log('Employee updated!')
-    })
-};
+        const sql = `UDPATE employees SET role_id = ? WHERE id = ?`;
+        const params = [answers.updateEmpID, answers.updateEmpRole];
 
-
-
-questions();
-
-
-
-
-/*
-questions() 
-    .then(userData => {
-        console.log(userData);
-        const pageXML = generatePage(userData);
-
-        fs.writeFile('./README.md', pageXML, err => {
-            if (err) throw new Error(err);
-
-            console.log('Page created!');
+        db.query(sql, params, (err, results) => {
+            if (err) throw err;
+            console.table(results);
+            questions();
         });
-    }); 
-    */
+    });
+};

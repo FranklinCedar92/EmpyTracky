@@ -27,7 +27,7 @@ router.post('/department', (req, res) => {
         return;
     }
     const sql = `INSERT INTO departments (dept_name)
-                VALUES (${input})`;
+                VALUES (?)`;
     const params = [body.dept_name];
 
     db.query(sql, params, (err, result) => {
