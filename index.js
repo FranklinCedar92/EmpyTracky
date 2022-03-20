@@ -2,15 +2,14 @@ const inquirer = require('inquirer');
 const fs = require('fs');
 const mysql = require('mysql2');
 const cTable = require('console.table');
-//const seeds = require('../db/seeds');
 
 //Connect to MySQL database
 const db = mysql.createConnection(
     {
         host: 'localhost',
-        //Your MySQL username,
+        //MySQL username,
         user: 'root',
-        //Your MySQL password
+        //MySQL password
         password: 'Lamppost00!',
         database: 'tracker'
     },
@@ -19,7 +18,7 @@ const db = mysql.createConnection(
 
 db.connect((err) => {
     if (err) throw err;
-    // console.log('Connected to the tracker database.')
+    // starts the inquirer prompts
     questions();
 });
 
@@ -33,7 +32,7 @@ const questions = () => {
             choices: ['View all departments', 'View all roles', 'View all employees', 'Add a department', 'Add a role', 'Add an employee', 'Update an employee']
         }
     ]).then((answers) => {
-        // console.log(answers.toDo);
+        // leads to other prompts
         switch (answers.toDo) {
             case "View all departments":
                 viewDepts();
@@ -60,6 +59,7 @@ const questions = () => {
     });
 };
 
+// view departments
 const viewDepts = () => {
     console.log('Viewing all departments');
     const sql = `SELECT * FROM departments`;
@@ -70,6 +70,7 @@ const viewDepts = () => {
     })
 };
 
+// view roles
 const viewRoles = () => {
     console.log('Viewing all roles');
     const sql = `SELECT * FROM roles`;
@@ -80,12 +81,11 @@ const viewRoles = () => {
     })
 };
 
+// view employees
 const viewEmps = () => {
     console.log('Viewing all employees');
-    const sql = `SELECT * FROM employees,  roles.job_title
-                AS role_id
-                FROM employees
-                FULL JOIN roles
+    const sql = `SELECT * FROM employees
+                LEFT JOIN roles
                 ON employees.role_id = roles.id`;
     db.query(sql, (err, results) => {
         if (err) throw err;
@@ -94,6 +94,7 @@ const viewEmps = () => {
     })
 };
 
+//add a department
 const addDept = () => {
     inquirer.prompt([
         {
@@ -117,12 +118,14 @@ const addDept = () => {
         db.query(sql, params, (err, results) => {
             if (err) throw err;
             console.table(results);
+            console.log('Departments updated!');
             questions();
         });
     })
     
 };
 
+// add a role
 const addRole = () => {
     inquirer.prompt([
         {
@@ -158,11 +161,13 @@ const addRole = () => {
         db.query(sql, params, (err, results) => {
             if (err) throw err;
             console.table(results);
+            console.log('Roles updated!');
             questions();
         });
     });
 };
 
+//add an employee
 const addEmp = () => {
     inquirer.prompt([
         {
@@ -225,12 +230,14 @@ const addEmp = () => {
         db.query(sql, params, (err, results) => {
             if (err) throw err;
             console.table(results);
+            ('Employees updated!');
             questions();
         });
     });
    
 };
 
+// update an employee's position by id numbers
 const updateEmp = () => {
     inquirer.prompt([
         {
@@ -260,12 +267,13 @@ const updateEmp = () => {
             }
         }
     ]).then((answers) => {
-        const sql = `UDPATE employees SET role_id = ? WHERE id = ?`;
+        const sql = `UPDATE employees SET role_id = ? WHERE id = ?`;
         const params = [answers.updateEmpID, answers.updateEmpRole];
 
         db.query(sql, params, (err, results) => {
             if (err) throw err;
             console.table(results);
+            ('Employee role updated!');
             questions();
         });
     });
