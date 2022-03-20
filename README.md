@@ -7,4 +7,4 @@ This is an offline application that allows a company to keep track of its employ
 [GitHub](https://github.com/FranklinCedar92/EmpyTracky)
 
 ### Walkthrough Video
-[Video](./EmpyTracky_Walkthrough.mp4)
+[Walthrough video](./EmpyTracky_Walkthrough.mp4)

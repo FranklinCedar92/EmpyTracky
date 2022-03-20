@@ -1,5 +1,4 @@
 const inquirer = require('inquirer');
-const fs = require('fs');
 const mysql = require('mysql2');
 const cTable = require('console.table');
 
@@ -84,6 +83,7 @@ const viewRoles = () => {
 // view employees
 const viewEmps = () => {
     console.log('Viewing all employees');
+    //merges information from Roles table into Employees table
     const sql = `SELECT * FROM employees
                 LEFT JOIN roles
                 ON employees.role_id = roles.id`;
@@ -278,11 +278,3 @@ const updateEmp = () => {
         });
     });
 };
-
-/*
-`SELECT employees.*,  roles.job_title
-                AS role_id
-                FROM employees
-                LEFT JOIN roles
-                ON employees.role_id = roles.id`;
-*/
