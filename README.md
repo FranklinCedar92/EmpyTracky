@@ -18,4 +18,4 @@ email: franklin.c.brown@gmail.com
 [Screenshot](./EmpyTracky_screenshot.png)
 
 ### Walkthrough Video
-[Walthrough video](https://drive.google.com/file/d/1liUaJJmwgf5V_8ngQ87tKKD30uict3O1/view)
+[Walkthrough video](https://drive.google.com/file/d/1liUaJJmwgf5V_8ngQ87tKKD30uict3O1/view)
